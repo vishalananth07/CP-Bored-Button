@@ -6,9 +6,9 @@ import functools
 
 
 def getProblemURL(user_rating,problem_list):
-	filtered_problem = [i for i in problem_list if i['rating']>=user_rating-100 and i['rating']<=user_rating+200]
+	filtered_problem = [i for i in problem_list if i['rating']>=user_rating-100 and i['rating']<=user_rating+300]
 	if len(filtered_problem) == 0:
-		greater_than_upper = [i for i in problem_list if i['rating']>user_rating+200]
+		greater_than_upper = [i for i in problem_list if i['rating']>user_rating+300]
 		less_than_lower = [i for i in problem_list if i['rating']<user_rating-100]
 		if len(greater_than_upper) > 0:
 			min_of_max = min(greater_than_upper,key = lambda x:x['rating'])
@@ -24,9 +24,15 @@ def getProblemURL(user_rating,problem_list):
 
 
 def calRatingAvg(solved_problems):
+	lim = 0
+	if len(solved_problems) <= 13:
+		lim = len(solved_problems)
+	else:
+		lim = (len(solved_problems)/5) + 10
+	lim = min(lim,100)
 	it = 0
 	rating_average = 0
-	while it<100 and it<len(solved_problems):
+	while it<lim:
 		rating_average += solved_problems[it]['rating']
 		it = it + 1
 	rating_average/=it
