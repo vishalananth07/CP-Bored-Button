@@ -7,8 +7,19 @@ import functools
 
 def getProblemURL(user_rating,problem_list):
 	filtered_problem = [i for i in problem_list if i['rating']>=user_rating-100 and i['rating']<=user_rating+200]
+	if len(filtered_problem) == 0:
+		greater_than_upper = [i for i in problem_list if i['rating']>user_rating+200]
+		less_than_lower = [i for i in problem_list if i['rating']<user_rating-100]
+		if len(greater_than_upper) > 0:
+			min_of_max = min(greater_than_upper,key = lambda x:x['rating'])
+			filtered_problem.append(min_of_max)
+		if len(less_than_lower) > 0:
+			max_of_min = max(less_than_lower,key = lambda x:x['rating'])
+			filtered_problem.append(max_of_min)
+	if len(filtered_problem) == 0:
+		print("You've Solved Everything")		
 	random_problem = random.choice(filtered_problem)
-	#https://codeforces.com/problemset/problem/400/B
+	#https://codeforces.com/problemset/problem/contestId/index
 	return "https://codeforces.com/problemset/problem/"+str(random_problem['contestId'])+"/"+random_problem['index']
 
 
@@ -32,11 +43,13 @@ def removeDupli(solved_problems):
 			s_problems.append(solved_problems[i-1])
 	return s_problems
 
+
 def sortFuncRat(problem1,problem2):
 	if problem1['rating']<problem2['rating']:
 		return 1
 	else:
 		return -1
+
 
 def sortFunc(problem1,problem2):
 	if problem1['contestId'] != problem2['contestId']:
@@ -63,7 +76,6 @@ def removeSolved(solved_problems,all_problems_wr):
 	
 
 def getRandomProblem(user_handle):
-
 	resp = requests.get("https://codeforces.com/api/user.status?handle="+ user_handle + "&from=1");
 	if resp.status_code < 200 or resp.status_code>299:
 		print("Error in Request : "+resp.url)
@@ -96,6 +108,4 @@ def getRandomProblem(user_handle):
 
 	cf_url = getProblemURL(rating_average,unsolved_problems)
 
-	#print("Average Rating : " + str(rating_average))
-	print("Opening : " + cf_url)
 	return cf_url
