@@ -23,6 +23,7 @@ def main():
 	url = ""
 	if random_oj == "codeforces":
 		url = cf_recommend.getRandomProblem(parameter["codeforces"])
+	print("Problem url:",url)
 	os.system("xdg-open "+url+" 2>/dev/null")
 if __name__ == "__main__":
 	main()
