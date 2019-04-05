@@ -11,6 +11,10 @@ To install pip, run<br>
 ```
 sudo apt install python3-pip
 ```
+To update pip, run<br>
+```
+sudo -H pip3 install --upgrade pip
+```
 Install the requirements for the Python file with <br>
 ```
 sudo -H pip3 install -r requirements.txt
