@@ -25,7 +25,6 @@ def getProblemURL(user_rating,problem_list):
 
 def calRatingAvg(solved_problems):
 	lim = 0
-	print("Solved "+str(len(solved_problems)));
 	if len(solved_problems) <= 13:
 		lim = len(solved_problems)
 	else:
