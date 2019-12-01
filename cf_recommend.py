@@ -4,12 +4,18 @@ import random
 import os
 import functools
 
+CONST_RATING_UPPERBOUND = 300
+CONST_RATING_LOWERBOUND = 100
+
+CONST_MIN_SOLVED_PROBLEM = 13
+CONST_AVERAGE_LIMIT = 100
+CONST_MIN_RATING_AVERAGE = 1000
 
 def getProblemURL(user_rating,problem_list):
-	filtered_problem = [i for i in problem_list if i['rating']>=user_rating-100 and i['rating']<=user_rating+300]
+	filtered_problem = [i for i in problem_list if i['rating'] >= user_rating - CONST_RATING_LOWERBOUND and i['rating'] <= user_rating + CONST_RATING_UPPERBOUND]
 	if len(filtered_problem) == 0:
-		greater_than_upper = [i for i in problem_list if i['rating']>user_rating+300]
-		less_than_lower = [i for i in problem_list if i['rating']<user_rating-100]
+		greater_than_upper = [i for i in problem_list if i['rating'] > user_rating + CONST_RATING_UPPERBOUND]
+		less_than_lower = [i for i in problem_list if i['rating'] < user_rating - CONST_RATING_LOWERBOUND]
 		if len(greater_than_upper) > 0:
 			min_of_max = min(greater_than_upper,key = lambda x:x['rating'])
 			filtered_problem.append(min_of_max)
@@ -19,48 +25,42 @@ def getProblemURL(user_rating,problem_list):
 	if len(filtered_problem) == 0:
 		print("You've Solved Everything")		
 	random_problem = random.choice(filtered_problem)
-	#https://codeforces.com/problemset/problem/contestId/index
-	return "https://codeforces.com/problemset/problem/"+str(random_problem['contestId'])+"/"+random_problem['index']
+	return "https://codeforces.com/problemset/problem/" + str(random_problem['contestId']) + "/" + random_problem['index']
 
-
-def calRatingAvg(solved_problems):
-	lim = 0
-	if len(solved_problems) <= 13:
-		lim = len(solved_problems)
+def getLimit(x):
+	limit = 0
+	if x <= CONST_MIN_SOLVED_PROBLEM:
+		limit = x
 	else:
-		lim = (len(solved_problems)/5) + 10
-	lim = min(lim,100)
-	it = 0
+		limit = (x/5) + 10
+	return min(limit,CONST_AVERAGE_LIMIT)
+
+def calculateRatingAvg(solved_problems):
+	limit = getLimit(len(solved_problems))
+	if limit == 0:
+		return CONST_MIN_RATING_AVERAGE
 	rating_average = 0
-	while it<lim:
-		rating_average += solved_problems[it]['rating']
-		it = it + 1
-	if it==0:
-		rating_average = 0
-	else:
-		rating_average/=it
-	if rating_average==0:
-		rating_average = 1000
+	for i in range(0,lim):
+		rating_average += solved_problems[i]['rating']
+	rating_average /= limit
 	return rating_average
 
-
-def removeDupli(solved_problems):
+def removeDuplicate(solved_problems):
 	n = len(solved_problems)
 	s_problems = []
 	for i in range(1,n):
-		if(solved_problems[i] != solved_problems[i-1]):
-			s_problems.append(solved_problems[i-1])
+		if(solved_problems[i] != solved_problems[i - 1]):
+			s_problems.append(solved_problems[i - 1])
 	return s_problems
 
 
-def sortFuncRat(problem1,problem2):
+def sortRatingComparator(problem1,problem2):
 	if problem1['rating']<problem2['rating']:
 		return 1
 	else:
 		return -1
 
-
-def sortFunc(problem1,problem2):
+def sortProblemComparator(problem1,problem2):
 	if problem1['contestId'] != problem2['contestId']:
 		if problem1['contestId']<problem2['contestId']:
 			return 1
@@ -72,7 +72,6 @@ def sortFunc(problem1,problem2):
 		else:
 			return -1
 
-
 def removeSolved(solved_problems,all_problems_wr):
 	unsolved_problems = []
 	i = 0
@@ -82,22 +81,25 @@ def removeSolved(solved_problems,all_problems_wr):
 		else:
 			i += 1
 	return unsolved_problems
-	
 
 def getRandomProblem(user_handle):
+	# Fetching handle
 	resp = requests.get("https://codeforces.com/api/user.status?handle="+ user_handle + "&from=1");
 	if resp.status_code < 200 or resp.status_code>299:
-		print("Error in Request : "+resp.url)
+		print("Error " + resp.status_code + "\nCould not fetch handle")
 		quit()
+
+	# Fetching solved problems
 	all_attempted_problems = resp.json()['result']
 	solved_problems = []
 	for problem in all_attempted_problems:
 		if "rating" in problem['problem'] and problem['verdict'] == "OK":
 			solved_problems.append({"contestId":problem['problem']['contestId'],"index":problem['problem']['index'],"rating":problem['problem']['rating']})
 
+	# Fetching all problems
 	resp = requests.get("https://codeforces.com/api/problemset.problems");
 	if resp.status_code < 200 or resp.status_code>299:
-		print("Error in Request : "+resp.url)
+		print("Error " + resp.status_code + "\nCould not fetch problems")
 		quit()
 	all_problems = resp.json()['result']['problems']
 	all_problems_wr = []
@@ -105,15 +107,15 @@ def getRandomProblem(user_handle):
 		if "rating" in problem:
 			all_problems_wr.append({"contestId":problem['contestId'],"index":problem['index'],"rating":problem['rating']})
 
-	solved_problems = sorted(solved_problems, key=functools.cmp_to_key(sortFunc))
-	all_problems_wr = sorted(all_problems_wr, key=functools.cmp_to_key(sortFunc))
+	solved_problems = sorted(solved_problems, key=functools.cmp_to_key(sortProblemComparator))
+	all_problems_wr = sorted(all_problems_wr, key=functools.cmp_to_key(sortProblemComparator))
 
 	unsolved_problems = removeSolved(solved_problems,all_problems_wr)
 
-	solved_problems = removeDupli(solved_problems)
-	solved_problems = sorted(solved_problems, key=functools.cmp_to_key(sortFuncRat))
+	solved_problems = removeDuplicate(solved_problems)
+	solved_problems = sorted(solved_problems, key=functools.cmp_to_key(sortRatingComparator))
 
-	rating_average = calRatingAvg(solved_problems)
+	rating_average = calculateRatingAvg(solved_problems)
 
 	cf_url = getProblemURL(rating_average,unsolved_problems)
 

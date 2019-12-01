@@ -2,8 +2,8 @@ from argparse import ArgumentParser
 import cf_recommend
 import random
 import os
+
 def getInput():
-	#Define Input Here
 	parser = ArgumentParser()
 	parser.add_argument("-cf","--codeforces",required=True )
 	args = parser.parse_args()
