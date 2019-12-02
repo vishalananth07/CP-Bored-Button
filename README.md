@@ -1,30 +1,26 @@
 # Bored Button
 A python script which randomly opens a CP problem according to user difficulty  
 
-## Installation
-To install Python3, run <br>
+## Requirements
+pip3
+
+## Installing the package
 ```
-sudo apt-get update
-sudo apt-get install python3.6
-```
-To install pip, run<br>
-```
-sudo apt install python3-pip
-```
-To update pip, run<br>
-```
-sudo -H pip3 install --upgrade pip
-```
-Install the requirements for the Python file with <br>
-```
-sudo -H pip3 install -r requirements.txt
+pip3 install cpboredbutton
 ```
 
 ## Running the File
 Run the script with  
 ```
-python3 recommend.py [-cf Codeforces_Handle]
+cpboredbutton [-cf Codeforces_Handle]
 ```
 
-## Progress
+## Completed
 * Implemented for Codeforces
+
+## Next Steps
+* Move Codeforces functions to class
+* Expand to Codechef, Hackerrank & SPOJ
+* Front-End service
+* API Service
+
