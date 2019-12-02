@@ -1,9 +1,0 @@
-README.md
-setup.py
-cpboredbutton/__init__.py
-cpboredbutton/cf_recommend.py
-cpboredbutton.egg-info/PKG-INFO
-cpboredbutton.egg-info/SOURCES.txt
-cpboredbutton.egg-info/dependency_links.txt
-cpboredbutton.egg-info/top_level.txt
-scripts/cpboredbutton
