@@ -1,0 +1,35 @@
+#!python
+
+from argparse import ArgumentParser
+import cpboredbutton.cf_recommend as cf_recommend
+import random
+import os
+
+
+def get_input():
+    parser = ArgumentParser()
+    parser.add_argument("-cf", "--codeforces", required=True)
+    args = parser.parse_args()
+    user_handles = {
+        "codeforces": args.codeforces
+    }
+    return user_handles
+
+
+def main():
+    parameter = get_input()
+    # Append all available OJs
+    open_url = []
+    if parameter["codeforces"] is not None:
+        open_url.append("codeforces")
+
+    random_oj = random.choice(open_url)
+    url = ""
+    if random_oj == "codeforces":
+        url = cf_recommend.get_random_problem(parameter["codeforces"])
+    print("Problem url:", url)
+    os.system("xdg-open " + url + " 2>/dev/null")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,41 @@
+Metadata-Version: 2.1
+Name: cpboredbutton
+Version: 1.0
+Summary: Competitive programming problem recommendation
+Home-page: https://github.com/vishalananth07/CP-Bored-Button
+Author: vishalananth, anishbadri
+Author-email: vishalananth98@gmail.com, anishbadhri@gmail.com
+License: UNKNOWN
+Description: # Bored Button
+        A python script which randomly opens a CP problem according to user difficulty  
+        
+        ## Requirements
+        pip3
+        
+        ## Installing the package
+        ```
+        pip3 install cpboredbutton
+        ```
+        
+        ## Running the File
+        Run the script with  
+        ```
+        cpboredbutton [-cf Codeforces_Handle]
+        ```
+        
+        ## Completed
+        * Implemented for Codeforces
+        
+        ## Next Steps
+        * Move Codeforces functions to class
+        * Expand to Codechef, Hackerrank & SPOJ
+        * Front-End service
+        * API Service
+        
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3
+Description-Content-Type: text/markdown

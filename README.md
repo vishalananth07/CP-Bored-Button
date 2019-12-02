@@ -6,7 +6,7 @@ pip3
 
 ## Installing the package
 ```
-pip3 install cpboredbutton
+sudo pip3 install cpboredbutton
 ```
 
 ## Running the File
@@ -23,4 +23,7 @@ cpboredbutton [-cf Codeforces_Handle]
 * Expand to Codechef, Hackerrank & SPOJ
 * Front-End service
 * API Service
+
+## Current Version
+1.0
 
