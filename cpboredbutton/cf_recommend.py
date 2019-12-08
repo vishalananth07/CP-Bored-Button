@@ -56,23 +56,14 @@ def remove_duplicate(solved_problems):
 
 
 def sort_rating_comparator(problem1, problem2):
-    if problem1['rating'] < problem2['rating']:
-        return 1
-    else:
-        return -1
+    return 1 if problem1['rating'] < problem2['rating'] else -1
 
 
 def sort_problem_comparator(problem1, problem2):
     if problem1['contestId'] != problem2['contestId']:
-        if problem1['contestId'] < problem2['contestId']:
-            return 1
-        else:
-            return -1
+        return 1 if problem1['contestId'] < problem2['contestId'] else -1
     else:
-        if problem1['index'] < problem2['index']:
-            return 1
-        else:
-            return -1
+        return 1 if problem1['index'] < problem2['index'] else -1
 
 
 def remove_solved(solved_problems, all_problems_wr):
